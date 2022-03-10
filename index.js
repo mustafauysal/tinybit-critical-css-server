@@ -42,6 +42,10 @@ app.post('/', async (req, res) => {
       css: cssFile,
       html: req.body.html,
       inline: false,
+      ignore: {
+        atrule: ['@font-face'],
+        decl: (node, value) => /url\(/.test(value),
+      },
       penthouse: {
         puppeteer: {
           getBrowser: () => browser,
