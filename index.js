@@ -17,7 +17,6 @@ app.post('/', async (req, res) => {
     args: [
       '--headless',
       '--disable-gpu',
-      '--single-process',
       '--no-zygote',
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -60,7 +59,8 @@ app.post('/', async (req, res) => {
     res.send({
       css: css,
     });
-    await browser.close()
+    await browser.close();
+    await browser.disconnect();
   } catch( err ) {
     res.status(400).send(err.message);
   }
