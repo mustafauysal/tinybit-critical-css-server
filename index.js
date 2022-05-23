@@ -57,6 +57,7 @@ app.post('/', async (req, res) => {
     res.send({
       css: css,
     });
+    await browser.close()
   } catch( err ) {
     res.status(400).send(err.message);
   }
