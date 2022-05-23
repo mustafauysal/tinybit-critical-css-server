@@ -15,9 +15,6 @@ app.post('/', async (req, res) => {
     headless: true,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
     args: [
-      '--headless',
-      '--disable-gpu',
-      '--no-zygote',
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
