@@ -44,6 +44,10 @@ app.post('/', async (req, res) => {
       css: cssFile,
       html: req.body.html,
       inline: false,
+      ignore: {
+        atrule: ['@font-face'],
+        decl: (node, value) => /url\(/.test(value),
+      },
       penthouse: {
         puppeteer: {
           getBrowser: () => browser,
@@ -56,6 +60,8 @@ app.post('/', async (req, res) => {
     res.send({
       css: fixedCss,
     });
+    await browser.close();
+    await browser.disconnect();
   } catch( err ) {
     res.status(400).send(err.message);
   }
