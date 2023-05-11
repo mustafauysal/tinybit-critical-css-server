@@ -36,9 +36,11 @@ app.post('/', async (req, res) => {
     },
   ];
   try {
-    await fs.promises.appendFile(cssFile, req.body.css);
+    // Pre-process CSS: Replace each \ with \\
+    const processedCss = req.body.css.replace(/\\/g, '\\\\');
+    await fs.promises.appendFile(cssFile, processedCss);
     const { css, html, uncritical } = await critical.generate({
-      concurrency: 1, // https://github.com/addyosmani/critical/issues/364#issuecomment-493865206
+      concurrency: 1,
       css: cssFile,
       html: req.body.html,
       inline: false,
@@ -49,13 +51,15 @@ app.post('/', async (req, res) => {
       }
     });
     await fs.promises.unlink(cssFile);
+    // Post-process CSS: Replace each \\ with \
+    const fixedCss = css.replace(/\\\\/g, '\\');
     res.send({
-      css: css,
+      css: fixedCss,
     });
   } catch( err ) {
     res.status(400).send(err.message);
   }
-})
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
